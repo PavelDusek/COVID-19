@@ -1,5 +1,4 @@
 # coding: utf-8
-import requests
 import datetime
 import pandas as pd
 import matplotlib.pyplot as plt
@@ -36,7 +35,6 @@ selected_countries = [
 	#'Burkina Faso',
 	#'Cambodia',
 	#'Cameroon',
-	#'Canada',
 	#'Cases on an international conveyance Japan',
 	#'Chile',
 	'China',
@@ -71,7 +69,6 @@ selected_countries = [
 	#'Iceland',
 	#'India',
 	#'Indonesia',
-	#'Iran',
 	#'Iraq',
 	#'Ireland',
 	#'Israel',
@@ -135,7 +132,6 @@ selected_countries = [
 	#'Swaziland',
 	#'Sweden',
 	'Switzerland',
-	#'Taiwan',
 	#'Thailand',
 	#'Togo',
 	#'Trinidad and Tobago',
@@ -148,6 +144,9 @@ selected_countries = [
 	#'Uruguay',
 	#'Venezuela',
 	#'Vietnam',
+	'Canada',
+	'Iran',
+	'Taiwan',
 ]
 
 f, ax = plt.subplots( nrows=2, ncols=1 )
