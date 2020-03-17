@@ -22,8 +22,8 @@ model = smf.ols( 'log ~ index', data=model_data )
 result = model.fit()
 
 f, ax = plt.subplots( nrows=1, ncols=2 )
-ax[0].plot( model_data['index'], model_data['log'], label='real data')
-ax[0].plot( model_data['index'], result.predict(model_data['index']), label='prediction' )
+ax[0].plot( model_data['index'], model_data['log'], label='Real Data')
+ax[0].plot( model_data['index'], result.predict(model_data['index']), label='Model' )
 ax[0].text( model_data['index'][0], model_data['log'].max() - 0.5, 'R^2 = {:.2f}'.format( result.rsquared_adj ) )
 ax[0].text( model_data['index'][0], model_data['log'].max() - 1, 'Cases = e^( {:.3f} * day + {:.3f} )'.format( result.params['index'], result.params['Intercept'] ) )
 ax[0].set_ylabel("Log No. cases")
@@ -50,7 +50,7 @@ cz['model'] = np.exp( result.params['index'] * cz['index'] + result.params['Inte
 
 
 ax[1].plot( cz['DateRep'], cz['Cases'], label='Real Data')
-ax[1].plot( cz['DateRep'], cz['model'], label='model')
+ax[1].plot( cz['DateRep'], cz['model'], label='Model')
 ax[1].set_ylabel("No. cases")
 plt.setp( ax[1].xaxis.get_majorticklabels(), rotation=25 )
 ax[1].legend()
