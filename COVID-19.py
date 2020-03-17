@@ -3,10 +3,17 @@ import datetime
 import pandas as pd
 import matplotlib.pyplot as plt
 import seaborn as sns
+import urllib
 
-today = datetime.datetime.now().strftime("%Y-%m-%d")
-url = f"https://www.ecdc.europa.eu/sites/default/files/documents/COVID-19-geographic-disbtribution-worldwide-{today}.xls"
-df = pd.read_excel(url)
+try:
+    today = datetime.datetime.now().strftime("%Y-%m-%d")
+    url = f"https://www.ecdc.europa.eu/sites/default/files/documents/COVID-19-geographic-disbtribution-worldwide-{today}.xls"
+    df = pd.read_excel(url)
+except urllib.error.HTTPError:
+    today = (datetime.datetime.now() - datetime.timedelta(days=1)).strftime("%Y-%m-%d")
+    url = f"https://www.ecdc.europa.eu/sites/default/files/documents/COVID-19-geographic-disbtribution-worldwide-{today}.xls"
+    df = pd.read_excel(url)
+
 df.loc[ df['CountryExp'] == 'Czech republic', 'CountryExp'] = 'Czech Republic'
 df.loc[ df['CountryExp'] == 'switzerland', 'CountryExp'] = 'Switzerland'
 df.loc[ df['CountryExp'] == 'United kingdom', 'CountryExp'] = 'United Kingdom'
