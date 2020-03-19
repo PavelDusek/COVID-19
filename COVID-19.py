@@ -3,10 +3,18 @@ import datetime
 import pandas as pd
 import matplotlib.pyplot as plt
 import seaborn as sns
+import urllib
 
 today = datetime.datetime.now().strftime("%Y-%m-%d")
-url = f"https://www.ecdc.europa.eu/sites/default/files/documents/COVID-19-geographic-disbtribution-worldwide-{today}.xlsx"
-df = pd.read_excel(url)
+try:
+    #try for xlsx
+    url = f"https://www.ecdc.europa.eu/sites/default/files/documents/COVID-19-geographic-disbtribution-worldwide-{today}.xlsx"
+    df = pd.read_excel(url)
+except urllib.error.HTTPError:
+    #the file is not xlsx, but xls?
+    url = f"https://www.ecdc.europa.eu/sites/default/files/documents/COVID-19-geographic-disbtribution-worldwide-{today}.xls"
+    df = pd.read_excel(url)
+
 
 selected_countries = [
        #'Afghanistan', 'Albania', 'Algeria', 'Andorra',
