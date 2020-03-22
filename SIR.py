@@ -34,6 +34,7 @@ S0 = population - I0 - R0
 
 #beta and gamma according to SIR model from https://www.kaggle.com/lisphilar/covid-19-data-with-sir-model
 beta, gamma = 1/5, 1/39
+#beta, gamma = 1/5, 1/11
 t = np.linspace(0, 159, 160)
 
 def derivative( y, t, population, beta, gamma ):

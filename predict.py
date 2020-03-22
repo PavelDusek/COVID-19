@@ -71,9 +71,17 @@ predict['Year'] = predict['DateRep'].apply( lambda d: d.year )
 
 cz = pd.concat( [cz, predict] )
 ax[1].plot( cz['DateRep'], cz['cumsum'], label='Real Data')
+
+### Just one model ###
 cz[f'model'] = np.exp( result.params['index'] * cz['index'] + result.params['Intercept'] )
 ax[1].plot( cz['DateRep'], cz[f'model'], label=f'Model')
+### Model by dates ###
+## All dates ##
 #for day in params.keys():
+## Just first and last day ##
+#days = params.keys()
+#days = [ min(days), max(days) ]
+#for day in days: 
 #    cz[f'model_{day}'] = np.exp( result.params['index'] * cz['index'] + result.params['Intercept'] )
 #    ax[1].plot( cz['DateRep'], cz[f'model_{day}'], label=f'Model based on {day} data')
 
