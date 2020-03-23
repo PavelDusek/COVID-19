@@ -10,9 +10,10 @@ params = json.loads(json_data)
 params
 dates, intercept, index = [], [], []
 for date, values in params.items():
-    dates.append(date)
-    intercept.append( values['Intercept'] )
-    index.append( values['index'] )
+    if not date.endswith("_for_last_week"):
+        dates.append(date)
+        intercept.append( values['Intercept'] )
+        index.append( values['index'] )
     
 param_df = pd.DataFrame( { 'dates': dates, 'intercept': intercept, 'exponent': index } )
 sns.scatterplot( x='intercept', y='exponent', data=param_df)
