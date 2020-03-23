@@ -7,6 +7,8 @@ Simple plot of time series of cases in selected countries.
 ## predict.py
 Prediction model for Czech Republic, based on the Lancet paper: Remuzzi A, Remuzzi G: COVID-19 and Italy: what next? The Lancet. 0140-6736. 2020/03/17. https://doi.org/10.1016/S0140-6736(20)30627-9
 
+Estimation of real cases based on mortality according to https://medium.com/@tomaspueyo/coronavirus-act-today-or-people-will-die-f4d3d9cd99ca
+
 ## params.json
 Evolution of the parameters of the prediction model day by day.
 
