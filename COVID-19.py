@@ -12,8 +12,21 @@ try:
     df = pd.read_excel(url)
 except urllib.error.HTTPError:
     #the file is not xlsx, but xls?
-    url = f"https://www.ecdc.europa.eu/sites/default/files/documents/COVID-19-geographic-disbtribution-worldwide-{today}.xls"
-    df = pd.read_excel(url)
+    try:
+        url = f"https://www.ecdc.europa.eu/sites/default/files/documents/COVID-19-geographic-disbtribution-worldwide-{today}.xls"
+        df = pd.read_excel(url)
+    except urllib.error.HTTPError:
+        try:
+            day = datetime.datetime.now()
+            day = day + datetime.timedelta(days=-1)
+            today = day.strftime("%Y-%m-%d")
+            #try for yesterdays date xlsx
+            url = f"https://www.ecdc.europa.eu/sites/default/files/documents/COVID-19-geographic-disbtribution-worldwide-{today}.xlsx"
+            df = pd.read_excel(url)
+        except urllib.error.HTTPError:
+            #the file is not xlsx, but xls?
+            url = f"https://www.ecdc.europa.eu/sites/default/files/documents/COVID-19-geographic-disbtribution-worldwide-{today}.xls"
+            df = pd.read_excel(url)
 
 
 selected_countries = [
