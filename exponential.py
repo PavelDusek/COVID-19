@@ -5,6 +5,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
 
+width, height, my_dpi = 1296, 670, 100
 with open('params.json') as f: json_data = f.read()
 params = json.loads(json_data)
 params
@@ -16,6 +17,7 @@ for date, values in params.items():
         index.append( values['index'] )
     
 param_df = pd.DataFrame( { 'dates': dates, 'intercept': intercept, 'exponent': index } )
+f = plt.figure( figsize=(width/100, height/100), dpi=my_dpi )
 sns.scatterplot( x='intercept', y='exponent', data=param_df)
 
 previous_point = np.array([np.nan, np.nan])
@@ -29,4 +31,6 @@ for index, row in param_df.iterrows():
         plt.arrow(x, y, dx, dy, fc="gray", ec="gray", width=0.00005, head_width=0.001, head_length=0.002 )
     previous_point = this_point
 plt.title("https://github.com/PavelDusek/COVID-19\nCOVID-19 in the Czech Republic\nEvolution of the Exponential Model Parameters by Date")
-plt.show()
+#plt.show()
+plt.savefig( 'exponential.png', dpi=my_dpi )
+plt.savefig( 'exponential.svg', dpi=my_dpi )

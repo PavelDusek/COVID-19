@@ -9,7 +9,7 @@ import urllib
 import json
 import os.path
 
-
+width, height, my_dpi = 1296, 670, 100
 
 def exponential_model( data ):
     model = smf.ols( 'log ~ index', data=data )
@@ -65,7 +65,7 @@ result, params[today] = exponential_model( data=model_data )
 model_data_last_week = model_data.loc[ model_data['DateRep'] >= ( datetime.datetime.now() + datetime.timedelta(days=-8) ) ]
 result_last_week, params[f"{today}_for_last_week"] = exponential_model( data=model_data_last_week )
 
-f, ax = plt.subplots( nrows=1, ncols=2 )
+f, ax = plt.subplots( nrows=1, ncols=2, figsize=(width/100, height/100), dpi=my_dpi )
 ax[0].plot( model_data['index'], model_data['log'], label='Real Data')
 ax[0].plot( model_data['index'], result.predict(model_data['index']), label='Model' )
 ax[0].plot( model_data_last_week['index'], result_last_week.predict(model_data_last_week['index']), label='Model for the last week' )
@@ -115,7 +115,9 @@ ax[1].set_ylabel("No. cases")
 plt.setp( ax[1].xaxis.get_majorticklabels(), rotation=25 )
 ax[1].legend()
 plt.suptitle(f"COVID-19 cases, Czech Republic, data from ecdc.europa.eu as of {today}\nmodel prediction, code at https://github.com/PavelDusek/COVID-19")
-plt.show()
+#plt.show()
+plt.savefig( 'predict.png', dpi=my_dpi )
+plt.savefig( 'predict.svg', dpi=my_dpi )
 
 with open("params.json", "w") as f: f.write( json.dumps( params, indent=4, sort_keys=True ) )
 
@@ -157,11 +159,13 @@ while( calculated_date <= last_date ):
     max_cases = max_cases * 2
     min_cases = min_cases * 2
 estim.loc[ estim.shape[0] ] = [ calculated_date, mean_cases, max_cases, min_cases ]
-f = plt.figure()
+f = plt.figure( figsize=(width/100, height/100), dpi=my_dpi )
 plt.plot('DateRep', 'cumsum', data=cz[['DateRep', 'cumsum']].dropna(), label='Confirmed Cases')
 #plt.plot('Date', 'Estim_Cases', data=estim[['Date', 'Estim_Cases']])
 plt.fill_between( 'Date', 'Min_Estim_Cases', 'Max_Estim_Cases', alpha=0.2, data=estim, label='Estimated Cases')
 plt.suptitle(f"COVID-19 cases, Czech Republic, data from ecdc.europa.eu as of {today}\nEstimation of Real Cases, Based on Mortality Data,\ncode at https://github.com/PavelDusek/COVID-19")
 plt.xticks(rotation=25)
 plt.legend()
-plt.show()
+#plt.show()
+plt.savefig( "estimated_cases.png", dpi=my_dpi )
+plt.savefig( "estimated_cases.svg", dpi=my_dpi )

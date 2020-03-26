@@ -5,6 +5,7 @@ import matplotlib.pyplot as plt
 import seaborn as sns
 import urllib
 
+width, height = 1296, 670
 today = datetime.datetime.now().strftime("%Y-%m-%d")
 try:
     #try for xlsx
@@ -77,7 +78,7 @@ selected_countries = [
        #'Uruguay', 'Uzbekistan', 'Venezuela', 'Vietnam'
    ]
 
-f, ax = plt.subplots( nrows=2, ncols=1 )
+f, ax = plt.subplots( nrows=2, ncols=1, figsize=(width/100, height/100), dpi=100 )
 for country in selected_countries:
     country_data = df.sort_values(by='DateRep', ascending=True).loc[ df['Countries and territories'] == country, 'Cases'].cumsum()
     country_data = country_data[ country_data > 0 ]
@@ -92,4 +93,6 @@ ax[1].legend()
 ax[0].set_ylabel("No. cases")
 ax[1].set_ylabel("No. cases")
 ax[1].set_xlabel("days")
-plt.show()
+#plt.show()
+plt.savefig( 'plot.png', dpi=100 )
+plt.savefig( 'plot.svg', dpi=100 )
