@@ -6,6 +6,7 @@ import seaborn as sns
 import urllib
 
 width, height = 1296, 670
+#today = "2020-03-28"
 today = datetime.datetime.now().strftime("%Y-%m-%d")
 try:
     #try for xlsx
@@ -26,9 +27,19 @@ except urllib.error.HTTPError:
             df = pd.read_excel(url)
         except urllib.error.HTTPError:
             #the file is not xlsx, but xls?
-            url = f"https://www.ecdc.europa.eu/sites/default/files/documents/COVID-19-geographic-disbtribution-worldwide-{today}.xls"
-            df = pd.read_excel(url)
-
+            try:
+                url = f"https://www.ecdc.europa.eu/sites/default/files/documents/COVID-19-geographic-disbtribution-worldwide-{today}.xls"
+                df = pd.read_excel(url)
+            except urllib.error.HTTPError:
+                url = "https://www.ecdc.europa.eu/sites/default/files/documents/COVID-19-geographic-disbtribution-worldwide.xlsx"
+                df = pd.read_excel(url)
+df.rename(
+       columns={
+            'dateRep': 'DateRep',
+            'countriesAndTerritories': 'Countries and territories',
+            'cases': 'Cases',
+            'deaths': 'Deaths',
+       }, inplace=True)
 
 selected_countries = [
        #'Afghanistan', 'Albania', 'Algeria', 'Andorra',
@@ -74,7 +85,8 @@ selected_countries = [
        'Taiwan',
        #'Thailand', 'Togo', 'Trinidad_and_Tobago', 'Tunisia',
        #'Turkey', 'Ukraine', 'United_Arab_Emirates', 'United_Kingdom',
-       #'United_Republic_of_Tanzania', 'United_States_of_America',
+       #'United_Republic_of_Tanzania',
+       'United_States_of_America',
        #'Uruguay', 'Uzbekistan', 'Venezuela', 'Vietnam'
    ]
 
