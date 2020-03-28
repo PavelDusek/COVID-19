@@ -30,6 +30,7 @@ if os.path.isfile("params.json"):
         json_params = f.read()
         params = json.loads( json_params )
 
+#today = "2020-03-28"
 today = datetime.datetime.now().strftime("%Y-%m-%d")
 try:
     #try for xlsx
@@ -50,8 +51,19 @@ except urllib.error.HTTPError:
             df = pd.read_excel(url)
         except urllib.error.HTTPError:
             #the file is not xlsx, but xls?
-            url = f"https://www.ecdc.europa.eu/sites/default/files/documents/COVID-19-geographic-disbtribution-worldwide-{today}.xls"
-            df = pd.read_excel(url)
+            try:
+                url = f"https://www.ecdc.europa.eu/sites/default/files/documents/COVID-19-geographic-disbtribution-worldwide-{today}.xls"
+                df = pd.read_excel(url)
+            except urllib.error.HTTPError:
+                url = "https://www.ecdc.europa.eu/sites/default/files/documents/COVID-19-geographic-disbtribution-worldwide.xlsx"
+                df = pd.read_excel(url)
+df.rename(
+       columns={
+            'dateRep': 'DateRep',
+            'countriesAndTerritories': 'Countries and territories',
+            'cases': 'Cases',
+            'deaths': 'Deaths',
+       }, inplace=True)
 
 cz = df.loc[ df['Countries and territories'] == 'Czech_Republic' ]
 cz = cz.loc[ cz['Cases'] > 0 ]
@@ -62,7 +74,7 @@ cz.loc[:, 'log'] = np.log( cz['cumsum'] )
 
 model_data = cz.loc[ cz['log'] > 0]
 result, params[today] = exponential_model( data=model_data )
-model_data_last_week = model_data.loc[ model_data['DateRep'] >= ( datetime.datetime.now() + datetime.timedelta(days=-8) ) ]
+model_data_last_week = model_data.loc[ model_data['DateRep'] >= ( datetime.datetime.strptime(today, "%Y-%m-%d") + datetime.timedelta(days=-8) ) ]
 result_last_week, params[f"{today}_for_last_week"] = exponential_model( data=model_data_last_week )
 
 f, ax = plt.subplots( nrows=1, ncols=2, figsize=(width/100, height/100), dpi=my_dpi )
@@ -135,9 +147,14 @@ def round_date( date ):
     return datetime.datetime( year, month, day )
 
 # Data from https://medium.com/@tomaspueyo/coronavirus-act-today-or-people-will-die-f4d3d9cd99ca
-mortality_rate_mean = 0.034
-mortality_rate_upper = 0.05
-mortality_rate_lower = 0.005
+#mortality_rate_mean = 0.034
+#mortality_rate_upper = 0.05
+#mortality_rate_lower = 0.005
+
+# Data from https://pubmed.ncbi.nlm.nih.gov/32168463/?dopt=Abstract
+mortality_rate_mean = 0.008
+mortality_rate_upper = 0.03
+mortality_rate_lower = 0.0025
 
 last_date = max( cz.loc[ cz['Deaths'] == cz['Deaths'].max(), 'DateRep'])
 deaths = cz.loc[ cz['DateRep'] == last_date, 'Deaths']
