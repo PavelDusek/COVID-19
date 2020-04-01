@@ -37,7 +37,7 @@ sns.scatterplot(
 )
 
 previous_point = np.array([np.nan, np.nan])
-for index, row in param_df.iterrows():
+for index, row in param_df.sort_values(by='dates').iterrows():
     plt.text( row['intercept'] + 0.001, row['exponent'] + 0.001, row['dates'], horizontalalignment='left', size='medium', color='black')
     this_point = np.array( [ row['intercept'], row['exponent'] ] )
     if previous_point.all():
