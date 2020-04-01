@@ -11,12 +11,14 @@ width, height = 1296, 670
 today = datetime.datetime.now().strftime("%Y-%m-%d")
 try:
     #try for xlsx
-    url = f"https://www.ecdc.europa.eu/sites/default/files/documents/COVID-19-geographic-disbtribution-worldwide-{today}.xlsx"
+    #url = f"https://www.ecdc.europa.eu/sites/default/files/documents/COVID-19-geographic-disbtribution-worldwide-{today}.xlsx"
+    url = "https://www.ecdc.europa.eu/sites/default/files/documents/COVID-19-geographic-disbtribution-worldwide-{}.xlsx".format(today)
     df = pd.read_excel(url)
 except urllib.error.HTTPError:
     #the file is not xlsx, but xls?
     try:
-        url = f"https://www.ecdc.europa.eu/sites/default/files/documents/COVID-19-geographic-disbtribution-worldwide-{today}.xls"
+        #url = f"https://www.ecdc.europa.eu/sites/default/files/documents/COVID-19-geographic-disbtribution-worldwide-{today}.xls"
+        url = "https://www.ecdc.europa.eu/sites/default/files/documents/COVID-19-geographic-disbtribution-worldwide-{}.xls".format(today)
         df = pd.read_excel(url)
     except urllib.error.HTTPError:
         try:
@@ -24,12 +26,14 @@ except urllib.error.HTTPError:
             day = day + datetime.timedelta(days=-1)
             today = day.strftime("%Y-%m-%d")
             #try for yesterdays date xlsx
-            url = f"https://www.ecdc.europa.eu/sites/default/files/documents/COVID-19-geographic-disbtribution-worldwide-{today}.xlsx"
+            #url = f"https://www.ecdc.europa.eu/sites/default/files/documents/COVID-19-geographic-disbtribution-worldwide-{today}.xlsx"
+            url = "https://www.ecdc.europa.eu/sites/default/files/documents/COVID-19-geographic-disbtribution-worldwide-{}.xlsx".format(today)
             df = pd.read_excel(url)
         except urllib.error.HTTPError:
             #the file is not xlsx, but xls?
             try:
-                url = f"https://www.ecdc.europa.eu/sites/default/files/documents/COVID-19-geographic-disbtribution-worldwide-{today}.xls"
+                #url = f"https://www.ecdc.europa.eu/sites/default/files/documents/COVID-19-geographic-disbtribution-worldwide-{today}.xls"
+                url = "https://www.ecdc.europa.eu/sites/default/files/documents/COVID-19-geographic-disbtribution-worldwide-{}.xls".format(today)
                 df = pd.read_excel(url)
             except urllib.error.HTTPError:
                 url = "https://www.ecdc.europa.eu/sites/default/files/documents/COVID-19-geographic-disbtribution-worldwide.xlsx"
@@ -97,7 +101,8 @@ for country in selected_countries:
     country_data = country_data[ country_data > 0 ]
     ax[0].plot( range( len( country_data ) ), country_data, label=country.replace("_", " ") )
     ax[1].plot( range( len( country_data ) ), country_data, label=country.replace("_", " ") )
-ax[0].set_title(f"COVID-19 cases, selected countries, data from ecdc.europa.eu as of {today}\nTotal Cases vs. Time\nhttps://github.com/PavelDusek/COVID-19")
+#ax[0].set_title(f"COVID-19 cases, selected countries, data from ecdc.europa.eu as of {today}\nTotal Cases vs. Time\nhttps://github.com/PavelDusek/COVID-19")
+ax[0].set_title("COVID-19 cases, selected countries, data from ecdc.europa.eu as of {}\nTotal Cases vs. Time\nhttps://github.com/PavelDusek/COVID-19".format(today))
 ax[1].set_yscale("log")
 ax[1].set_title("Log scale")
 ax[0].legend()
@@ -117,7 +122,8 @@ for country in selected_countries:
     country_data['cumsum_per_100k_inh'] = country_data['cumsum'] / np.max(country_data['popData2018'])
     ax[0].plot( range( len(country_data) ), country_data['cumsum_per_100k_inh'], label=country.replace("_", " ") )
     ax[1].plot( range( len( country_data ) ), country_data['cumsum_per_100k_inh'], label=country.replace("_", " ") )
-ax[0].set_title(f"COVID-19 cases, selected countries, data from ecdc.europa.eu as of {today}\nTotal Cases per 100k Inhabitants vs. Time\nhttps://github.com/PavelDusek/COVID-19")
+#ax[0].set_title(f"COVID-19 cases, selected countries, data from ecdc.europa.eu as of {today}\nTotal Cases per 100k Inhabitants vs. Time\nhttps://github.com/PavelDusek/COVID-19")
+ax[0].set_title("COVID-19 cases, selected countries, data from ecdc.europa.eu as of {}\nTotal Cases per 100k Inhabitants vs. Time\nhttps://github.com/PavelDusek/COVID-19".format(today))
 ax[1].set_yscale("log")
 ax[1].set_title("Log scale")
 ax[0].legend()
@@ -196,7 +202,8 @@ plt.yscale("log")
 plt.xscale("log")
 plt.ylabel("New Cases For Last 7 Days")
 plt.xlabel("Total Cases")
-plt.title(f"COVID-19 cases, selected countries, data from ecdc.europa.eu as of {today}\nLogarithmic Scale New vs. Total Cases\nhttps://github.com/PavelDusek/COVID-19")
+#plt.title(f"COVID-19 cases, selected countries, data from ecdc.europa.eu as of {today}\nLogarithmic Scale New vs. Total Cases\nhttps://github.com/PavelDusek/COVID-19")
+plt.title("COVID-19 cases, selected countries, data from ecdc.europa.eu as of {}\nLogarithmic Scale New vs. Total Cases\nhttps://github.com/PavelDusek/COVID-19".format(today))
 plt.suptitle("")
 plt.legend()
 plt.savefig( 'plot_new_vs_total.png', dpi=100 )

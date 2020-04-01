@@ -34,12 +34,14 @@ if os.path.isfile("params.json"):
 today = datetime.datetime.now().strftime("%Y-%m-%d")
 try:
     #try for xlsx
-    url = f"https://www.ecdc.europa.eu/sites/default/files/documents/COVID-19-geographic-disbtribution-worldwide-{today}.xlsx"
+    #url = f"https://www.ecdc.europa.eu/sites/default/files/documents/COVID-19-geographic-disbtribution-worldwide-{today}.xlsx"
+    url = "https://www.ecdc.europa.eu/sites/default/files/documents/COVID-19-geographic-disbtribution-worldwide-{}.xlsx".format(today)
     df = pd.read_excel(url)
 except urllib.error.HTTPError:
     #the file is not xlsx, but xls?
     try:
-        url = f"https://www.ecdc.europa.eu/sites/default/files/documents/COVID-19-geographic-disbtribution-worldwide-{today}.xls"
+        #url = f"https://www.ecdc.europa.eu/sites/default/files/documents/COVID-19-geographic-disbtribution-worldwide-{today}.xls"
+        url = "https://www.ecdc.europa.eu/sites/default/files/documents/COVID-19-geographic-disbtribution-worldwide-{}.xls".format(today)
         df = pd.read_excel(url)
     except urllib.error.HTTPError:
         try:
@@ -47,12 +49,14 @@ except urllib.error.HTTPError:
             day = day + datetime.timedelta(days=-1)
             today = day.strftime("%Y-%m-%d")
             #try for yesterdays date xlsx
-            url = f"https://www.ecdc.europa.eu/sites/default/files/documents/COVID-19-geographic-disbtribution-worldwide-{today}.xlsx"
+            #url = f"https://www.ecdc.europa.eu/sites/default/files/documents/COVID-19-geographic-disbtribution-worldwide-{today}.xlsx"
+            url = "https://www.ecdc.europa.eu/sites/default/files/documents/COVID-19-geographic-disbtribution-worldwide-{}.xlsx".format(today)
             df = pd.read_excel(url)
         except urllib.error.HTTPError:
             #the file is not xlsx, but xls?
             try:
-                url = f"https://www.ecdc.europa.eu/sites/default/files/documents/COVID-19-geographic-disbtribution-worldwide-{today}.xls"
+                #url = f"https://www.ecdc.europa.eu/sites/default/files/documents/COVID-19-geographic-disbtribution-worldwide-{today}.xls"
+                url = "https://www.ecdc.europa.eu/sites/default/files/documents/COVID-19-geographic-disbtribution-worldwide-{}.xls".format(today)
                 df = pd.read_excel(url)
             except urllib.error.HTTPError:
                 url = "https://www.ecdc.europa.eu/sites/default/files/documents/COVID-19-geographic-disbtribution-worldwide.xlsx"
@@ -76,7 +80,8 @@ cz.loc[:, 'log'] = np.log( cz['cumsum'] )
 model_data = cz.loc[ cz['log'] > 0]
 result, params[today] = exponential_model( data=model_data )
 model_data_last_week = model_data.loc[ model_data['DateRep'] >= ( datetime.datetime.strptime(today, "%Y-%m-%d") + datetime.timedelta(days=-8) ) ]
-result_last_week, params[f"{today}_for_last_week"] = exponential_model( data=model_data_last_week )
+#result_last_week, params[f"{today}_for_last_week"] = exponential_model( data=model_data_last_week )
+result_last_week, params["{}_for_last_week".format(today)] = exponential_model( data=model_data_last_week )
 
 f, ax = plt.subplots( nrows=1, ncols=2, figsize=(width/100, height/100), dpi=my_dpi )
 ax[0].plot( model_data['index'], model_data['log'], label='Real Data')
@@ -127,7 +132,8 @@ ax[1].plot( cz['DateRep'], cz[f'model_last_week'], label=f'Model for last week d
 ax[1].set_ylabel("No. cases")
 plt.setp( ax[1].xaxis.get_majorticklabels(), rotation=25 )
 ax[1].legend()
-plt.suptitle(f"COVID-19 cases, Czech Republic, data from ecdc.europa.eu as of {today}\nmodel prediction, code at https://github.com/PavelDusek/COVID-19")
+#plt.suptitle(f"COVID-19 cases, Czech Republic, data from ecdc.europa.eu as of {today}\nmodel prediction, code at https://github.com/PavelDusek/COVID-19")
+plt.suptitle("COVID-19 cases, Czech Republic, data from ecdc.europa.eu as of {}\nmodel prediction, code at https://github.com/PavelDusek/COVID-19".format(today))
 #plt.show()
 plt.savefig( 'predict.png', dpi=my_dpi )
 plt.savefig( 'predict.svg', dpi=my_dpi )
@@ -188,7 +194,8 @@ testy = pd.read_csv("https://onemocneni-aktualne.mzcr.cz/api/v1/covid-19/testy.c
 testy['datum'] = pd.to_datetime(testy['datum'])
 plt.plot('datum', 'testy_celkem', data=testy, label='No. of test performed' )
 
-plt.suptitle(f"COVID-19 cases, Czech Republic, data from ecdc.europa.eu as of {today}\nEstimation of Real Cases, Based on Mortality Data,\ncode at https://github.com/PavelDusek/COVID-19")
+#plt.suptitle(f"COVID-19 cases, Czech Republic, data from ecdc.europa.eu as of {today}\nEstimation of Real Cases, Based on Mortality Data,\ncode at https://github.com/PavelDusek/COVID-19")
+plt.suptitle("COVID-19 cases, Czech Republic, data from ecdc.europa.eu as of {}\nEstimation of Real Cases, Based on Mortality Data,\ncode at https://github.com/PavelDusek/COVID-19".format(today))
 plt.xticks(rotation=25)
 plt.legend()
 #plt.show()
