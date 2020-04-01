@@ -30,7 +30,7 @@ if os.path.isfile("params.json"):
         json_params = f.read()
         params = json.loads( json_params )
 
-#today = "2020-03-28"
+#today = "2020-03-30"
 today = datetime.datetime.now().strftime("%Y-%m-%d")
 try:
     #try for xlsx
@@ -57,6 +57,7 @@ except urllib.error.HTTPError:
             except urllib.error.HTTPError:
                 url = "https://www.ecdc.europa.eu/sites/default/files/documents/COVID-19-geographic-disbtribution-worldwide.xlsx"
                 df = pd.read_excel(url)
+print(url)
 df.rename(
        columns={
             'dateRep': 'DateRep',
@@ -176,13 +177,21 @@ while( calculated_date <= last_date ):
     max_cases = max_cases * 2
     min_cases = min_cases * 2
 estim.loc[ estim.shape[0] ] = [ calculated_date, mean_cases, max_cases, min_cases ]
+
+
 f = plt.figure( figsize=(width/100, height/100), dpi=my_dpi )
 plt.plot('DateRep', 'cumsum', data=cz[['DateRep', 'cumsum']].dropna(), label='Confirmed Cases')
 #plt.plot('Date', 'Estim_Cases', data=estim[['Date', 'Estim_Cases']])
-plt.fill_between( 'Date', 'Min_Estim_Cases', 'Max_Estim_Cases', alpha=0.2, data=estim, label='Estimated Cases')
+plt.fill_between( 'Date', 'Min_Estim_Cases', 'Max_Estim_Cases', alpha=0.2, data=estim, label='Estimated Cases Range')
+
+testy = pd.read_csv("https://onemocneni-aktualne.mzcr.cz/api/v1/covid-19/testy.csv")
+testy['datum'] = pd.to_datetime(testy['datum'])
+plt.plot('datum', 'testy_celkem', data=testy, label='No. of test performed' )
+
 plt.suptitle(f"COVID-19 cases, Czech Republic, data from ecdc.europa.eu as of {today}\nEstimation of Real Cases, Based on Mortality Data,\ncode at https://github.com/PavelDusek/COVID-19")
 plt.xticks(rotation=25)
 plt.legend()
 #plt.show()
 plt.savefig( "estimated_cases.png", dpi=my_dpi )
 plt.savefig( "estimated_cases.svg", dpi=my_dpi )
+
