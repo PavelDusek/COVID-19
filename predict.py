@@ -115,10 +115,10 @@ cz = pd.concat( [cz, predict] )
 ax[1].plot( cz['DateRep'], cz['cumsum'], label='Real Data')
 
 ### Just one model ###
-cz[f'model'] = np.exp( result.params['index'] * cz['index'] + result.params['Intercept'] )
-cz[f'model_last_week'] = np.exp( result_last_week.params['index'] * cz['index'] + result_last_week.params['Intercept'] )
-ax[1].plot( cz['DateRep'], cz[f'model'], label=f'Model')
-ax[1].plot( cz['DateRep'], cz[f'model_last_week'], label=f'Model for last week data')
+cz['model'] = np.exp( result.params['index'] * cz['index'] + result.params['Intercept'] )
+cz['model_last_week'] = np.exp( result_last_week.params['index'] * cz['index'] + result_last_week.params['Intercept'] )
+ax[1].plot( cz['DateRep'], cz['model'], label='Model')
+ax[1].plot( cz['DateRep'], cz['model_last_week'], label='Model for last week data')
 ### Model by dates ###
 ## All dates ##
 #for day in params.keys():
@@ -126,8 +126,8 @@ ax[1].plot( cz['DateRep'], cz[f'model_last_week'], label=f'Model for last week d
 #days = params.keys()
 #days = [ min(days), max(days) ]
 #for day in days: 
-#    cz[f'model_{day}'] = np.exp( result.params['index'] * cz['index'] + result.params['Intercept'] )
-#    ax[1].plot( cz['DateRep'], cz[f'model_{day}'], label=f'Model based on {day} data')
+#    cz['model_{day}'] = np.exp( result.params['index'] * cz['index'] + result.params['Intercept'] )
+#    ax[1].plot( cz['DateRep'], cz['model_{day}'], label='Model based on {day} data')
 
 ax[1].set_ylabel("No. cases")
 plt.setp( ax[1].xaxis.get_majorticklabels(), rotation=25 )
