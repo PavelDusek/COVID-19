@@ -119,7 +119,7 @@ for country in selected_countries:
     country_data = df.sort_values(by='DateRep', ascending=True).loc[ df['Countries and territories'] == country]
     country_data['cumsum'] = country_data['Cases'].cumsum()
     country_data = country_data.loc[ country_data['cumsum'] > 0 ]
-    country_data['cumsum_per_100k_inh'] = country_data['cumsum'] / np.max(country_data['popData2018'])
+    country_data['cumsum_per_100k_inh'] = 100000 * (country_data['cumsum'] / np.max(country_data['popData2018']) )
     ax[0].plot( range( len(country_data) ), country_data['cumsum_per_100k_inh'], label=country.replace("_", " ") )
     ax[1].plot( range( len( country_data ) ), country_data['cumsum_per_100k_inh'], label=country.replace("_", " ") )
 #ax[0].set_title(f"COVID-19 cases, selected countries, data from ecdc.europa.eu as of {today}\nTotal Cases per 100k Inhabitants vs. Time\nhttps://github.com/PavelDusek/COVID-19")
