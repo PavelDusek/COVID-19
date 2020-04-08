@@ -7,8 +7,8 @@ import seaborn as sns
 import urllib
 
 width, height = 1296, 670
-#today = "2020-03-29"
 today = datetime.datetime.now().strftime("%Y-%m-%d")
+#today = "2020-04-08"
 try:
     #try for xlsx
     #url = f"https://www.ecdc.europa.eu/sites/default/files/documents/COVID-19-geographic-disbtribution-worldwide-{today}.xlsx"
@@ -45,6 +45,7 @@ df.rename(
             'cases': 'Cases',
             'deaths': 'Deaths',
        }, inplace=True)
+df.loc[ df['Countries and territories'] == 'Czechia', 'Countries and territories'] = 'Czech_Republic'
 
 selected_countries = [
        #'Afghanistan', 'Albania', 'Algeria', 'Andorra',
