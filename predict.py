@@ -30,8 +30,8 @@ if os.path.isfile("params.json"):
         json_params = f.read()
         params = json.loads( json_params )
 
-#today = "2020-03-30"
 today = datetime.datetime.now().strftime("%Y-%m-%d")
+#today = "2020-04-08"
 try:
     #try for xlsx
     #url = f"https://www.ecdc.europa.eu/sites/default/files/documents/COVID-19-geographic-disbtribution-worldwide-{today}.xlsx"
@@ -69,6 +69,7 @@ df.rename(
             'cases': 'Cases',
             'deaths': 'Deaths',
        }, inplace=True)
+df.loc[ df['Countries and territories'] == 'Czechia', 'Countries and territories'] = 'Czech_Republic'
 
 cz = df.loc[ df['Countries and territories'] == 'Czech_Republic' ]
 cz = cz.loc[ cz['Cases'] > 0 ]
