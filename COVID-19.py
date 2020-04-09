@@ -197,16 +197,14 @@ for country in selected_countries:
     plt.plot(
             'Total Number of Cases',
             'New Cases',
-            data=country_data.dropna().rename(columns={'cumsum': 'Total Number of Cases', 'week_cases': 'New Cases'}),
+            data=country_data[['cumsum', 'week_cases']].dropna().rename(columns={'cumsum': 'Total Number of Cases', 'week_cases': 'New Cases'}),
             label=country.replace("_", " ") )
 plt.yscale("log")
 plt.xscale("log")
 plt.ylabel("New Cases For Last 7 Days")
 plt.xlabel("Total Cases")
-#plt.title(f"COVID-19 cases, selected countries, data from ecdc.europa.eu as of {today}\nLogarithmic Scale New vs. Total Cases\nhttps://github.com/PavelDusek/COVID-19")
 plt.title("COVID-19 cases, selected countries, data from ecdc.europa.eu as of {}\nLogarithmic Scale New vs. Total Cases\nhttps://github.com/PavelDusek/COVID-19".format(today))
 plt.suptitle("")
 plt.legend()
 plt.savefig( 'plot_new_vs_total.png', dpi=100 )
 plt.savefig( 'plot_new_vs_total.svg', dpi=100 )
-#plt.show()
