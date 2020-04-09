@@ -25,6 +25,8 @@ for date, values in params.items():
     if date.endswith("_for_last_week"):
         date_ = date.replace("_for_last_week", "")
         param_df.loc[ param_df['dates'] == date_, 'R2_last_week' ] = values['R2']
+        param_df.loc[ param_df['dates'] == date_, 'Intercept_last_week' ] = values['Intercept']
+        param_df.loc[ param_df['dates'] == date_, 'exponent_last_week' ] = values['index']
 
 param_df['R2_last_week'] = param_df['R2_last_week'] * 100 #convert to percent
 
@@ -49,6 +51,33 @@ for index, row in param_df.sort_values(by='dates').iterrows():
 plt.title("https://github.com/PavelDusek/COVID-19\nCOVID-19 in the Czech Republic\nEvolution of the Exponential Model Parameters by Date")
 plt.ylim( bottom = np.min( param_df['exponent'] ) - 0.01, top = np.max( param_df['exponent'] ) + 0.01 )
 plt.xlim( left = np.min( param_df['intercept'] ) - 0.03, right = np.max( param_df['intercept'] ) + 0.07 )
-#plt.show()
 plt.savefig( 'exponential.png', dpi=my_dpi )
 plt.savefig( 'exponential.svg', dpi=my_dpi )
+
+
+###################
+# Last week model #
+###################
+f = plt.figure( figsize=(width/100, height/100), dpi=my_dpi )
+sns.scatterplot(
+    x='Intercept_last_week',
+    y='exponent_last_week',
+    size='Exponential model fit (R2) [%] for last week data',
+    data=param_df.rename(columns={'R2_last_week': 'Exponential model fit (R2) [%] for last week data'}),
+)
+
+previous_point = np.array([np.nan, np.nan])
+for index, row in param_df.sort_values(by='dates').iterrows():
+    plt.text( row['Intercept_last_week'] + 0.001, row['exponent_last_week'] + 0.001, row['dates'], horizontalalignment='left', size='medium', color='black')
+    this_point = np.array( [ row['Intercept_last_week'], row['exponent_last_week'] ] )
+    if previous_point.all():
+        delta = this_point - previous_point
+        x, y = (previous_point)+ 0.125 * delta
+        dx, dy = delta * 0.65
+        plt.arrow(x, y, dx, dy, fc="gray", ec="gray", width=0.00005, head_width=0.001, head_length=0.002 )
+    previous_point = this_point
+plt.title("https://github.com/PavelDusek/COVID-19\nCOVID-19 in the Czech Republic\nEvolution of the Exponential Model Parameters by Date\nModel based on last week data")
+plt.ylim( bottom = np.min( param_df['exponent_last_week'] ) - 0.01, top = np.max( param_df['exponent_last_week'] ) + 0.01 )
+plt.xlim( left = np.min( param_df['Intercept_last_week'] ) - 0.03, right = np.max( param_df['Intercept_last_week'] ) + 0.07 )
+plt.savefig( 'exponential2.png', dpi=my_dpi )
+plt.savefig( 'exponential2.svg', dpi=my_dpi )
