@@ -81,8 +81,8 @@ cz.loc[:, 'log'] = np.log( cz['cumsum'] )
 model_data = cz.loc[ cz['log'] > 0]
 result, params[today] = exponential_model( data=model_data )
 model_data_last_week = model_data.loc[ model_data['DateRep'] >= ( datetime.datetime.strptime(today, "%Y-%m-%d") + datetime.timedelta(days=-8) ) ]
-#result_last_week, params[f"{today}_for_last_week"] = exponential_model( data=model_data_last_week )
 result_last_week, params["{}_for_last_week".format(today)] = exponential_model( data=model_data_last_week )
+
 
 f, ax = plt.subplots( nrows=1, ncols=2, figsize=(width/100, height/100), dpi=my_dpi )
 ax[0].plot( model_data['index'], model_data['log'], label='Real Data')
@@ -94,6 +94,26 @@ ax[0].text( model_data['index'][0], model_data['log'].max() - 1, 'R^2 = {:.2f}'.
 ax[0].text( model_data['index'][0], model_data['log'].max() - 1.25, 'Cases = e^( {:.3f} * day + {:.3f} )'.format( result_last_week.params['index'], result_last_week.params['Intercept'] ), color=plt_colors[2])
 ax[0].set_ylabel("Log No. cases")
 ax[0].legend()
+
+initdate = datetime.datetime(2020, 3, 1)
+texts = {
+        datetime.datetime(2020, 3, 7): u"Karanténa cestovatelů z Itálie",
+        datetime.datetime(2020, 3, 9): u"Zákaz návštěv v nemocnicích",
+        datetime.datetime(2020, 3, 10): u"Zákaz společenských akcí, uzávěr škol",
+        datetime.datetime(2020, 3, 12): u"Stav nouze",
+        datetime.datetime(2020, 3, 13): u"Karanténa cestovatelů z rizikových zemí",
+        datetime.datetime(2020, 3, 14): u"Uzavření obchodů",
+        datetime.datetime(2020, 3, 15): u"Zákaz volného pohybu osob",
+        datetime.datetime(2020, 3, 18): u"Povinnost ochranných prostředků",
+        datetime.datetime(2020, 3, 25): u"Pouze dva lidé spolu",
+        datetime.datetime(2020, 3, 30): u"Spuštění chytré karantény",
+        datetime.datetime(2020, 4, 6): u"Individuální sportování bez roušek",
+        datetime.datetime(2020, 4, 8): u"Otevření obchodů",
+}
+for date, text in texts.items():
+    time_difference = date - initdate
+    days = time_difference.days
+    ax[0].text( days, 1, text, rotation=90, alpha=0.3 )
 
 cz['model'] = np.exp( result.params['index'] * cz['index'] + result.params['Intercept'] )
 
@@ -114,28 +134,15 @@ predict['Year'] = predict['DateRep'].apply( lambda d: d.year )
 
 cz = pd.concat( [cz, predict] )
 ax[1].plot( cz['DateRep'], cz['cumsum'], label='Real Data')
-
-### Just one model ###
 cz['model'] = np.exp( result.params['index'] * cz['index'] + result.params['Intercept'] )
 cz['model_last_week'] = np.exp( result_last_week.params['index'] * cz['index'] + result_last_week.params['Intercept'] )
 ax[1].plot( cz['DateRep'], cz['model'], label='Model')
 ax[1].plot( cz['DateRep'], cz['model_last_week'], label='Model for last week data')
-### Model by dates ###
-## All dates ##
-#for day in params.keys():
-## Just first and last day ##
-#days = params.keys()
-#days = [ min(days), max(days) ]
-#for day in days: 
-#    cz['model_{day}'] = np.exp( result.params['index'] * cz['index'] + result.params['Intercept'] )
-#    ax[1].plot( cz['DateRep'], cz['model_{day}'], label='Model based on {day} data')
 
 ax[1].set_ylabel("No. cases")
 plt.setp( ax[1].xaxis.get_majorticklabels(), rotation=25 )
 ax[1].legend()
-#plt.suptitle(f"COVID-19 cases, Czech Republic, data from ecdc.europa.eu as of {today}\nmodel prediction, code at https://github.com/PavelDusek/COVID-19")
 plt.suptitle("COVID-19 cases, Czech Republic, data from ecdc.europa.eu as of {}\nmodel prediction, code at https://github.com/PavelDusek/COVID-19".format(today))
-#plt.show()
 plt.savefig( 'predict.png', dpi=my_dpi )
 plt.savefig( 'predict.svg', dpi=my_dpi )
 
