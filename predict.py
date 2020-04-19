@@ -115,6 +115,7 @@ for date, text in texts.items():
     days = time_difference.days
     ax[0].text( days, 1, text, rotation=90, alpha=0.3 )
 
+ax[0].set_ylim([ 0, ax[0].get_ylim()[1] ])
 cz['model'] = np.exp( result.params['index'] * cz['index'] + result.params['Intercept'] )
 
 prediction_length = 8 
