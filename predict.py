@@ -109,6 +109,14 @@ texts = {
         datetime.datetime(2020, 3, 30): u"Spuštění chytré karantény",
         datetime.datetime(2020, 4, 6): u"Individuální sportování bez roušek",
         datetime.datetime(2020, 4, 8): u"Otevření obchodů",
+        datetime.datetime(2020, 4, 9): u"Upraven režim nošení roušek",
+        datetime.datetime(2020, 4, 11): u"Sportování v malých skupinách",
+        datetime.datetime(2020, 4, 14): u"Nouzové cestování do zahraničí",
+        datetime.datetime(2020, 4, 20): u"Uvolnění řemesla, prodej aut, trhy, sportovci, malé svatby, zkoušky VŠ",
+        datetime.datetime(2020, 4, 27): u"Uvolnění malé provozy, autoškoly, fitness, malé bohoslužby, knihovny, ZOO venku",
+        datetime.datetime(2020, 5, 11): u"Uvolnění velké provozy, gastronomie venku, kultura, velké bohoslužby, velké svatby",
+        datetime.datetime(2020, 5, 25): u"Uvolnění gastronomie uvnitř, hotely, taxi, tábory, cestování",
+        datetime.datetime(2020, 6, 1): u"Uvolnění maturity",
 }
 for date, text in texts.items():
     time_difference = date - initdate
